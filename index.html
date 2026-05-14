@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Elysian | 3-in-1 Premium Calculator</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -21,55 +22,60 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 12px;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            transition: all 0.5s ease;
+            transition: background 0.3s ease;
         }
 
+        /* Compact wrapper - full calculator visible in one view */
         .calculator-wrapper {
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
+            margin: 0 auto;
         }
 
         .calculator {
             background: rgba(15, 25, 45, 0.85);
             backdrop-filter: blur(20px);
-            border-radius: 48px;
-            padding: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            border-radius: 36px;
+            padding: 16px 20px 20px 20px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
+            width: 100%;
         }
 
+        /* Reduced spacing for compactness */
         .calc-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .brand-icon {
-            width: 45px;
-            height: 45px;
+            width: 38px;
+            height: 38px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 18px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .brand-icon i {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: white;
         }
 
         .brand-name {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 700;
             background: linear-gradient(135deg, #fff, #a78bfa);
             -webkit-background-clip: text;
@@ -79,12 +85,12 @@
 
         .theme-rings {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .ring {
-            width: 32px;
-            height: 32px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s;
@@ -102,24 +108,24 @@
 
         .mode-container {
             background: rgba(0,0,0,0.3);
-            border-radius: 50px;
-            padding: 4px;
+            border-radius: 40px;
+            padding: 3px;
             display: flex;
             gap: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .mode-btn {
             flex: 1;
-            padding: 10px 0;
+            padding: 7px 0;
             border: none;
             background: transparent;
             color: rgba(255,255,255,0.6);
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             cursor: pointer;
-            border-radius: 50px;
+            border-radius: 40px;
             transition: all 0.3s;
         }
 
@@ -130,36 +136,39 @@
 
         .display {
             background: rgba(0, 0, 0, 0.4);
-            border-radius: 32px;
-            padding: 24px;
-            margin-bottom: 20px;
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
             text-align: right;
+            word-break: break-word;
         }
 
         .expression {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             color: rgba(255,255,255,0.5);
-            min-height: 24px;
+            min-height: 18px;
+            letter-spacing: 0.3px;
         }
 
         .result {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 700;
             color: white;
             word-wrap: break-word;
-            margin-top: 8px;
+            margin-top: 4px;
+            line-height: 1.2;
         }
 
         .programmer-info {
             display: none;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: rgba(255,255,255,0.5);
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .programmer-info.show {
@@ -169,9 +178,9 @@
         .scientific-grid {
             display: none;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -182,9 +191,9 @@
         .programmer-grid {
             display: none;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -195,26 +204,22 @@
         .main-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .calc-btn {
-            padding: 16px 12px;
+            padding: 10px 6px;
             border: none;
-            border-radius: 28px;
-            font-size: 1.1rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             font-family: 'Space Grotesk', sans-serif;
         }
 
-        .calc-btn:hover {
-            transform: translateY(-2px);
-        }
-
         .calc-btn:active {
-            transform: translateY(1px);
+            transform: scale(0.96);
         }
 
         .btn-number {
@@ -230,15 +235,15 @@
         .btn-scientific {
             background: rgba(139, 92, 246, 0.15);
             color: #c4b5fd;
-            font-size: 0.85rem;
-            padding: 12px 8px;
+            font-size: 0.7rem;
+            padding: 8px 4px;
         }
 
         .btn-programmer {
             background: rgba(236, 72, 153, 0.15);
             color: #f9a8d4;
-            font-size: 0.85rem;
-            padding: 12px 8px;
+            font-size: 0.7rem;
+            padding: 8px 4px;
         }
 
         .btn-equals {
@@ -260,19 +265,21 @@
             grid-column: span 2;
         }
 
+        /* History Panel - compact but functional */
         .history-panel {
             position: fixed;
-            right: -380px;
+            right: -320px;
             top: 0;
-            width: 380px;
+            width: 320px;
             height: 100vh;
-            background: rgba(15, 25, 45, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(15, 25, 45, 0.97);
+            backdrop-filter: blur(24px);
             border-left: 1px solid rgba(255,255,255,0.1);
             transition: right 0.3s ease;
             z-index: 1000;
-            padding: 24px;
+            padding: 20px;
             overflow-y: auto;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.4);
         }
 
         .history-panel.open {
@@ -283,24 +290,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .history-header h3 {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: white;
         }
 
         .history-clear {
-            background: none;
+            background: rgba(239,68,68,0.2);
             border: none;
             color: #f87171;
             cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
+            transition: 0.2s;
+        }
+
+        .history-clear:active {
+            transform: scale(0.95);
         }
 
         .history-list {
@@ -308,54 +323,143 @@
         }
 
         .history-item {
-            padding: 14px;
+            padding: 10px 12px;
             background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            margin-bottom: 10px;
+            border-radius: 16px;
+            margin-bottom: 8px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .history-item:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(-5px);
+        .history-item:active {
+            transform: scale(0.98);
         }
 
         .history-expr {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             color: rgba(255,255,255,0.6);
+            word-break: break-word;
         }
 
         .history-result {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #a78bfa;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .history-toggle {
             position: fixed;
-            right: 20px;
-            bottom: 20px;
-            width: 55px;
-            height: 55px;
+            right: 16px;
+            bottom: 16px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             border: none;
             border-radius: 50%;
             cursor: pointer;
             color: white;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 1001;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
         }
 
-        @media (max-width: 550px) {
-            .calculator { padding: 16px; }
-            .calc-btn { padding: 12px 6px; font-size: 0.9rem; }
-            .btn-scientific, .btn-programmer { font-size: 0.65rem; padding: 10px 4px; }
-            .result { font-size: 2rem; }
-            .history-panel { width: 300px; }
-            .mode-btn { font-size: 0.7rem; }
+        .history-toggle:active {
+            transform: scale(0.92);
+        }
+
+        /* Responsive fine-tuning for very small screens */
+        @media (max-width: 500px) {
+            body {
+                padding: 8px;
+            }
+            .calculator {
+                padding: 12px 14px 16px 14px;
+                border-radius: 28px;
+            }
+            .display {
+                padding: 10px 14px;
+                margin-bottom: 10px;
+            }
+            .result {
+                font-size: 1.8rem;
+            }
+            .calc-btn {
+                padding: 8px 4px;
+                font-size: 0.8rem;
+                border-radius: 20px;
+            }
+            .btn-scientific, .btn-programmer {
+                font-size: 0.6rem;
+                padding: 6px 2px;
+            }
+            .main-grid, .scientific-grid, .programmer-grid {
+                gap: 7px;
+            }
+            .mode-btn {
+                font-size: 0.65rem;
+                padding: 5px 0;
+            }
+            .brand-icon {
+                width: 32px;
+                height: 32px;
+            }
+            .brand-name {
+                font-size: 0.95rem;
+            }
+            .ring {
+                width: 22px;
+                height: 22px;
+            }
+            .history-panel {
+                width: 280px;
+                padding: 16px;
+            }
+        }
+
+        /* For tablets & laptops - maintain compactness */
+        @media (min-width: 501px) and (max-width: 800px) {
+            .calculator {
+                padding: 16px 18px 18px 18px;
+            }
+            .calc-btn {
+                padding: 11px 6px;
+                font-size: 0.9rem;
+            }
+            .result {
+                font-size: 2rem;
+            }
+        }
+
+        /* Ensure no vertical overflow - whole calculator fits */
+        @media (max-height: 700px) {
+            body {
+                padding: 8px;
+            }
+            .calculator {
+                padding: 10px 14px 14px 14px;
+            }
+            .display {
+                padding: 8px 12px;
+                margin-bottom: 8px;
+            }
+            .result {
+                font-size: 1.7rem;
+            }
+            .mode-container {
+                margin-bottom: 8px;
+            }
+            .scientific-grid, .programmer-grid {
+                margin-bottom: 8px;
+                padding-bottom: 6px;
+            }
+            .main-grid {
+                gap: 8px;
+            }
+            .calc-btn {
+                padding: 7px 4px;
+            }
         }
     </style>
 </head>
@@ -462,6 +566,311 @@
     </ul>
 </div>
 
-<script src="script.js"></script>
+<script>
+    // ============================================
+    // ELYSIAN CALCULATOR - REAL SCIENTIFIC MODE (COMPACT)
+    // ============================================
+
+    class ElysianCalculator {
+        constructor() {
+            this.currentValue = '0';
+            this.previousValue = '';
+            this.operation = null;
+            this.resetScreen = false;
+            this.history = [];
+            this.currentMode = 'basic';
+            this.pendingFunction = null;
+            this.waitingForNumber = false;
+            
+            this.loadHistory();
+            this.init();
+        }
+
+        init() {
+            this.updateDisplay();
+            this.renderHistory();
+            this.setupEventListeners();
+            this.setupThemes();
+            this.setupModeToggle();
+        }
+
+        loadHistory() {
+            const saved = localStorage.getItem('elysianHistory');
+            if (saved) {
+                this.history = JSON.parse(saved);
+            }
+        }
+
+        saveHistory() {
+            localStorage.setItem('elysianHistory', JSON.stringify(this.history));
+        }
+
+        addToHistory(expression, result) {
+            this.history.unshift({
+                expression: expression,
+                result: result,
+                mode: this.currentMode.toUpperCase(),
+                time: new Date().toLocaleTimeString()
+            });
+            if (this.history.length > 25) this.history.pop();
+            this.saveHistory();
+            this.renderHistory();
+        }
+
+        clearHistory() {
+            this.history = [];
+            this.saveHistory();
+            this.renderHistory();
+        }
+
+        renderHistory() {
+            const historyList = document.getElementById('historyList');
+            if (this.history.length === 0) {
+                historyList.innerHTML = '<li style="text-align: center; opacity: 0.5;">No history yet</li>';
+                return;
+            }
+            historyList.innerHTML = this.history.map((item, idx) => `
+                <li class="history-item" data-result="${item.result}" data-idx="${idx}">
+                    <div class="history-expr">${item.expression} =</div>
+                    <div class="history-result">${item.result}</div>
+                </li>
+            `).join('');
+            
+            document.querySelectorAll('.history-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    this.currentValue = item.getAttribute('data-result');
+                    this.previousValue = '';
+                    this.operation = null;
+                    this.pendingFunction = null;
+                    this.waitingForNumber = false;
+                    this.resetScreen = true;
+                    this.updateDisplay();
+                    this.closeHistory();
+                });
+            });
+        }
+
+        updateDisplay() {
+            document.getElementById('result').textContent = this.currentValue;
+            let expr = '';
+            if (this.pendingFunction && this.waitingForNumber) {
+                expr = `${this.pendingFunction}(`;
+                if (this.currentValue !== '0' && this.currentValue !== '') expr += this.currentValue;
+                expr += ')';
+            } else if (this.operation && this.previousValue) {
+                const symbols = { '+': '+', '-': '-', '*': '×', '/': '÷', '%': '%' };
+                expr = `${this.previousValue} ${symbols[this.operation] || this.operation}`;
+                if (this.currentValue !== '0' && this.currentValue !== '') expr += ` ${this.currentValue}`;
+            }
+            document.getElementById('expression').textContent = expr || '';
+            if (this.currentMode === 'programmer') this.updateProgrammerInfo();
+        }
+
+        updateProgrammerInfo() {
+            let num = parseInt(this.currentValue);
+            if (isNaN(num)) num = 0;
+            document.getElementById('hexVal').textContent = (num >>> 0).toString(16).toUpperCase();
+            document.getElementById('binVal').textContent = (num >>> 0).toString(2);
+            document.getElementById('decVal').textContent = num;
+        }
+
+        appendNumber(num) {
+            if (this.waitingForNumber) {
+                this.currentValue = '';
+                this.waitingForNumber = false;
+                this.resetScreen = false;
+            }
+            if (this.resetScreen) {
+                this.currentValue = '';
+                this.resetScreen = false;
+            }
+            if (num === '.' && this.currentValue.includes('.')) return;
+            if (this.currentValue === '0' && num !== '.') this.currentValue = num;
+            else this.currentValue += num;
+            this.updateDisplay();
+        }
+
+        scientificFunction(func) {
+            if (func === 'pi') {
+                this.currentValue = Math.PI.toString();
+                this.addToHistory('π', Math.PI);
+                this.resetScreen = true;
+                this.updateDisplay();
+                return;
+            }
+            if (func === 'e') {
+                this.currentValue = Math.E.toString();
+                this.addToHistory('e', Math.E);
+                this.resetScreen = true;
+                this.updateDisplay();
+                return;
+            }
+            this.pendingFunction = func;
+            this.waitingForNumber = true;
+            this.resetScreen = true;
+            this.updateDisplay();
+        }
+
+        executePendingFunction() {
+            if (!this.pendingFunction) return;
+            let val = parseFloat(this.currentValue);
+            if (isNaN(val)) { this.currentValue = 'Error'; this.updateDisplay(); return; }
+            let result;
+            let expression = '';
+            switch(this.pendingFunction) {
+                case 'sin': result = Math.sin(val * Math.PI / 180); expression = `sin(${val}°)`; break;
+                case 'cos': result = Math.cos(val * Math.PI / 180); expression = `cos(${val}°)`; break;
+                case 'tan': result = Math.tan(val * Math.PI / 180); expression = `tan(${val}°)`; break;
+                case 'sqrt': if (val < 0) result = 'Error'; else result = Math.sqrt(val); expression = `√(${val})`; break;
+                case 'pow2': result = Math.pow(val, 2); expression = `${val}²`; break;
+                case 'log': if (val <= 0) result = 'Error'; else result = Math.log10(val); expression = `log₁₀(${val})`; break;
+                case 'ln': if (val <= 0) result = 'Error'; else result = Math.log(val); expression = `ln(${val})`; break;
+                case 'fact': result = this.factorial(val); expression = `${val}!`; break;
+                default: return;
+            }
+            if (result === 'Error' || isNaN(result) || !isFinite(result)) this.currentValue = 'Error';
+            else { result = parseFloat(result.toFixed(10)); this.currentValue = result.toString(); this.addToHistory(expression, result); }
+            this.pendingFunction = null;
+            this.waitingForNumber = false;
+            this.resetScreen = true;
+            this.updateDisplay();
+        }
+
+        factorial(n) { if (n < 0 || !Number.isInteger(n)) return NaN; if (n <= 1) return 1; let f=1; for(let i=2;i<=n;i++) f*=i; return f; }
+
+        chooseOperation(op) {
+            if (this.pendingFunction && !this.waitingForNumber) this.executePendingFunction();
+            if (this.currentValue === '' || this.currentValue === 'Error') return;
+            if (this.previousValue !== '' && this.operation) this.calculate();
+            this.operation = op;
+            this.previousValue = this.currentValue;
+            this.currentValue = '';
+            this.updateDisplay();
+        }
+
+        calculate() {
+            if (this.pendingFunction && !this.waitingForNumber) this.executePendingFunction();
+            const prev = parseFloat(this.previousValue);
+            const current = parseFloat(this.currentValue);
+            if (isNaN(prev) || isNaN(current)) return;
+            const displayOp = { '+': '+', '-': '-', '*': '×', '/': '÷', '%': '%' }[this.operation] || this.operation;
+            const expression = `${this.previousValue} ${displayOp} ${this.currentValue}`;
+            let result;
+            switch (this.operation) {
+                case '+': result = prev + current; break;
+                case '-': result = prev - current; break;
+                case '*': result = prev * current; break;
+                case '/': if (current === 0) result = 'Error'; else result = prev / current; break;
+                case '%': result = (prev * current) / 100; break;
+                default: return;
+            }
+            if (result === 'Error') this.currentValue = 'Error';
+            else { result = parseFloat(result.toFixed(10)); this.currentValue = result.toString(); this.addToHistory(expression, result); }
+            this.operation = null;
+            this.previousValue = '';
+            this.resetScreen = true;
+            this.updateDisplay();
+        }
+
+        equals() {
+            if (this.pendingFunction && !this.waitingForNumber) this.executePendingFunction();
+            else if (this.operation && this.currentValue !== '' && this.previousValue !== '') this.calculate();
+            else if (this.pendingFunction && this.waitingForNumber && this.currentValue !== '') this.executePendingFunction();
+        }
+
+        programmerFunction(func) {
+            let val = parseInt(this.currentValue);
+            if (isNaN(val)) val = 0;
+            if (['A','B','C','D','E','F'].includes(func)) {
+                let newVal = (val * 16) + parseInt(func, 16);
+                this.currentValue = newVal.toString();
+                this.updateDisplay();
+                return;
+            }
+            let result, expression = '';
+            switch(func) {
+                case 'hex': result = '0x' + val.toString(16).toUpperCase(); expression = `DEC→HEX: ${val}`; this.currentValue = result; break;
+                case 'dec': result = val.toString(); expression = `HEX→DEC: ${val}`; this.currentValue = result; break;
+                case 'bin': result = (val >>> 0).toString(2); expression = `DEC→BIN: ${val}`; this.currentValue = result; break;
+                case 'oct': result = val.toString(8); expression = `DEC→OCT: ${val}`; this.currentValue = result; break;
+                case 'and': if (this.previousValue !== '') { const p = parseInt(this.previousValue); result = p & val; expression = `${p} AND ${val}`; this.currentValue = result.toString(); this.addToHistory(expression, result); this.previousValue = ''; this.operation = null; } else { this.previousValue = this.currentValue; this.currentValue = ''; this.operation = 'AND'; this.updateDisplay(); return; } break;
+                case 'or': if (this.previousValue !== '') { const p = parseInt(this.previousValue); result = p | val; expression = `${p} OR ${val}`; this.currentValue = result.toString(); this.addToHistory(expression, result); this.previousValue = ''; this.operation = null; } else { this.previousValue = this.currentValue; this.currentValue = ''; this.operation = 'OR'; this.updateDisplay(); return; } break;
+                case 'xor': if (this.previousValue !== '') { const p = parseInt(this.previousValue); result = p ^ val; expression = `${p} XOR ${val}`; this.currentValue = result.toString(); this.addToHistory(expression, result); this.previousValue = ''; this.operation = null; } else { this.previousValue = this.currentValue; this.currentValue = ''; this.operation = 'XOR'; this.updateDisplay(); return; } break;
+                case 'not': result = ~val; expression = `NOT ${val}`; this.currentValue = result.toString(); this.addToHistory(expression, result); break;
+                case 'lshift': result = val << 1; expression = `${val} << 1`; this.currentValue = result.toString(); this.addToHistory(expression, result); break;
+                case 'rshift': result = val >> 1; expression = `${val} >> 1`; this.currentValue = result.toString(); this.addToHistory(expression, result); break;
+                default: return;
+            }
+            this.resetScreen = true;
+            this.updateDisplay();
+            if (!['hex','dec','bin','oct'].includes(func)) this.addToHistory(expression, result);
+        }
+
+        clear() { this.currentValue = '0'; this.previousValue = ''; this.operation = null; this.pendingFunction = null; this.waitingForNumber = false; this.resetScreen = false; this.updateDisplay(); }
+        delete() {
+            if (this.currentValue === 'Error') { this.clear(); return; }
+            if (this.waitingForNumber) { this.pendingFunction = null; this.waitingForNumber = false; this.currentValue = '0'; }
+            else if (this.currentValue.length === 1 || (this.currentValue === '0' && !this.resetScreen)) this.currentValue = '0';
+            else this.currentValue = this.currentValue.slice(0, -1);
+            this.updateDisplay();
+        }
+
+        setupThemes() {
+            const themes = { dark: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)', aurora: 'linear-gradient(135deg, #064e3b, #0f766e, #0891b2)', sunset: 'linear-gradient(135deg, #831843, #be185d, #f97316)' };
+            document.querySelectorAll('.ring').forEach(ring => {
+                ring.addEventListener('click', () => {
+                    const theme = ring.getAttribute('data-theme');
+                    document.body.style.background = themes[theme];
+                    document.querySelectorAll('.ring').forEach(r => r.classList.remove('active'));
+                    ring.classList.add('active');
+                });
+            });
+        }
+
+        setupModeToggle() {
+            const modeBtns = document.querySelectorAll('.mode-btn');
+            const scientificGrid = document.getElementById('scientificGrid');
+            const programmerGrid = document.getElementById('programmerGrid');
+            const programmerInfo = document.getElementById('programmerInfo');
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentMode = btn.getAttribute('data-mode');
+                    scientificGrid.classList.remove('show');
+                    programmerGrid.classList.remove('show');
+                    programmerInfo.classList.remove('show');
+                    if (this.currentMode === 'scientific') scientificGrid.classList.add('show');
+                    else if (this.currentMode === 'programmer') { programmerGrid.classList.add('show'); programmerInfo.classList.add('show'); }
+                    this.clear();
+                });
+            });
+        }
+
+        closeHistory() { document.getElementById('historyPanel').classList.remove('open'); }
+
+        setupEventListeners() {
+            document.querySelectorAll('[data-num]').forEach(btn => btn.addEventListener('click', () => this.appendNumber(btn.getAttribute('data-num'))));
+            document.querySelectorAll('[data-op]').forEach(btn => btn.addEventListener('click', () => this.chooseOperation(btn.getAttribute('data-op'))));
+            document.querySelectorAll('[data-func]').forEach(btn => btn.addEventListener('click', () => this.scientificFunction(btn.getAttribute('data-func'))));
+            document.querySelectorAll('[data-prog]').forEach(btn => btn.addEventListener('click', () => this.programmerFunction(btn.getAttribute('data-prog'))));
+            document.querySelector('[data-action="clear"]').addEventListener('click', () => this.clear());
+            document.querySelector('[data-action="delete"]').addEventListener('click', () => this.delete());
+            document.querySelector('[data-action="equals"]').addEventListener('click', () => this.equals());
+            document.getElementById('historyToggle').addEventListener('click', () => document.getElementById('historyPanel').classList.toggle('open'));
+            document.getElementById('clearHistory').addEventListener('click', () => this.clearHistory());
+            document.addEventListener('click', (e) => { const panel = document.getElementById('historyPanel'); const toggle = document.getElementById('historyToggle'); if (!panel.contains(e.target) && !toggle.contains(e.target) && panel.classList.contains('open')) panel.classList.remove('open'); });
+            document.addEventListener('keydown', (e) => {
+                if (e.key >= '0' && e.key <= '9' || e.key === '.') this.appendNumber(e.key);
+                else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/' || e.key === '%') this.chooseOperation(e.key);
+                else if (e.key === 'Enter' || e.key === '=') this.equals();
+                else if (e.key === 'Escape') this.clear();
+                else if (e.key === 'Backspace') this.delete();
+            });
+        }
+    }
+
+    new ElysianCalculator();
+</script>
 </body>
 </html>
