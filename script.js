@@ -68,8 +68,8 @@ class ElysianCalculator {
             return;
         }
         
-        historyList.innerHTML = this.history.map(item => `
-            <li class="history-item" data-result="${item.result}">
+        historyList.innerHTML = this.history.map((item, idx) => `
+            <li class="history-item" data-result="${item.result}" data-idx="${idx}">
                 <div class="history-expr">${item.expression} =</div>
                 <div class="history-result">${item.result}</div>
             </li>
@@ -90,7 +90,10 @@ class ElysianCalculator {
     }
 
     updateDisplay() {
-        document.getElementById('result').textContent = this.currentValue;
+        const resultEl = document.getElementById('result');
+        const expressionEl = document.getElementById('expression');
+        
+        if (resultEl) resultEl.textContent = this.currentValue;
         
         let expr = '';
         if (this.pendingFunction && this.waitingForNumber) {
@@ -102,11 +105,11 @@ class ElysianCalculator {
         } else if (this.operation && this.previousValue) {
             const symbols = { '+': '+', '-': '-', '*': '×', '/': '÷', '%': '%' };
             expr = `${this.previousValue} ${symbols[this.operation] || this.operation}`;
-            if (this.currentValue !== '0') {
+            if (this.currentValue !== '0' && this.currentValue !== '') {
                 expr += ` ${this.currentValue}`;
             }
         }
-        document.getElementById('expression').textContent = expr;
+        if (expressionEl) expressionEl.textContent = expr;
         
         if (this.currentMode === 'programmer') {
             this.updateProgrammerInfo();
@@ -117,16 +120,20 @@ class ElysianCalculator {
         let num = parseInt(this.currentValue);
         if (isNaN(num)) num = 0;
         
-        document.getElementById('hexVal').textContent = num.toString(16).toUpperCase();
-        document.getElementById('binVal').textContent = num.toString(2);
-        document.getElementById('decVal').textContent = num;
+        const hexEl = document.getElementById('hexVal');
+        const binEl = document.getElementById('binVal');
+        const decEl = document.getElementById('decVal');
+        
+        if (hexEl) hexEl.textContent = (num >>> 0).toString(16).toUpperCase();
+        if (binEl) binEl.textContent = (num >>> 0).toString(2);
+        if (decEl) decEl.textContent = num;
     }
 
     // Handle number input
     appendNumber(num) {
         if (this.waitingForNumber) {
             // We're waiting for a number after a function
-            this.currentValue = '0';
+            this.currentValue = '';
             this.waitingForNumber = false;
             this.resetScreen = false;
         }
@@ -185,7 +192,7 @@ class ElysianCalculator {
         }
         
         let result;
-        let expression = `${this.pendingFunction}(${val}°)`;
+        let expression = '';
         
         switch(this.pendingFunction) {
             case 'sin':
@@ -260,14 +267,20 @@ class ElysianCalculator {
 
     // Basic operations
     chooseOperation(op) {
-        // If there's a pending scientific function, execute it first
+        // If there's a pending scientific function without number, clear it
+        if (this.pendingFunction && this.waitingForNumber) {
+            this.pendingFunction = null;
+            this.waitingForNumber = false;
+        }
+        
+        // If there's a pending function with number ready, execute it first
         if (this.pendingFunction && !this.waitingForNumber) {
             this.executePendingFunction();
         }
         
-        if (this.currentValue === '') return;
+        if (this.currentValue === '' || this.currentValue === 'Error') return;
         
-        if (this.previousValue !== '') {
+        if (this.previousValue !== '' && this.operation) {
             this.calculate();
         }
         
@@ -281,6 +294,7 @@ class ElysianCalculator {
         // Execute any pending scientific function first
         if (this.pendingFunction && !this.waitingForNumber) {
             this.executePendingFunction();
+            if (this.currentValue === 'Error') return;
         }
         
         let result;
@@ -289,7 +303,8 @@ class ElysianCalculator {
         
         if (isNaN(prev) || isNaN(current)) return;
         
-        const expression = `${prev} ${this.operation} ${current}`;
+        const displayOp = { '+': '+', '-': '-', '*': '×', '/': '÷', '%': '%' }[this.operation] || this.operation;
+        const displayExpr = `${this.previousValue} ${displayOp} ${this.currentValue}`;
         
         switch (this.operation) {
             case '+': result = prev + current; break;
@@ -308,7 +323,7 @@ class ElysianCalculator {
         } else {
             result = parseFloat(result.toFixed(10));
             this.currentValue = result.toString();
-            this.addToHistory(expression, result);
+            this.addToHistory(displayExpr, result);
         }
         
         this.operation = null;
@@ -327,6 +342,10 @@ class ElysianCalculator {
         else if (this.operation && this.currentValue !== '' && this.previousValue !== '') {
             this.calculate();
         }
+        // If waiting for number but equals pressed, execute function with current value
+        else if (this.pendingFunction && this.waitingForNumber && this.currentValue !== '') {
+            this.executePendingFunction();
+        }
     }
 
     // Programmer Functions
@@ -337,9 +356,17 @@ class ElysianCalculator {
         let result;
         let expression = '';
         
+        // Handle HEX digits A-F
+        if (['A', 'B', 'C', 'D', 'E', 'F'].includes(func)) {
+            let newVal = (val * 16) + parseInt(func, 16);
+            this.currentValue = newVal.toString();
+            this.updateDisplay();
+            return;
+        }
+        
         switch(func) {
             case 'hex':
-                result = val.toString(16).toUpperCase();
+                result = '0x' + val.toString(16).toUpperCase();
                 expression = `DEC→HEX: ${val}`;
                 this.currentValue = result;
                 break;
@@ -349,7 +376,7 @@ class ElysianCalculator {
                 this.currentValue = result;
                 break;
             case 'bin':
-                result = val.toString(2);
+                result = (val >>> 0).toString(2);
                 expression = `DEC→BIN: ${val}`;
                 this.currentValue = result;
                 break;
@@ -359,7 +386,7 @@ class ElysianCalculator {
                 this.currentValue = result;
                 break;
             case 'and':
-                if (this.previousValue) {
+                if (this.previousValue !== '') {
                     const prev = parseInt(this.previousValue);
                     result = prev & val;
                     expression = `${prev} AND ${val}`;
@@ -376,7 +403,7 @@ class ElysianCalculator {
                 }
                 break;
             case 'or':
-                if (this.previousValue) {
+                if (this.previousValue !== '') {
                     const prev = parseInt(this.previousValue);
                     result = prev | val;
                     expression = `${prev} OR ${val}`;
@@ -393,7 +420,7 @@ class ElysianCalculator {
                 }
                 break;
             case 'xor':
-                if (this.previousValue) {
+                if (this.previousValue !== '') {
                     const prev = parseInt(this.previousValue);
                     result = prev ^ val;
                     expression = `${prev} XOR ${val}`;
@@ -427,15 +454,12 @@ class ElysianCalculator {
                 this.currentValue = result.toString();
                 this.addToHistory(expression, result);
                 break;
-            case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                this.appendNumber(func);
-                return;
             default: return;
         }
         
         this.resetScreen = true;
         this.updateDisplay();
-        if (func !== 'hex' && func !== 'dec' && func !== 'bin' && func !== 'oct') {
+        if (!['hex', 'dec', 'bin', 'oct'].includes(func)) {
             this.addToHistory(expression, result);
         }
     }
@@ -499,15 +523,15 @@ class ElysianCalculator {
                 
                 this.currentMode = btn.getAttribute('data-mode');
                 
-                scientificGrid.classList.remove('show');
-                programmerGrid.classList.remove('show');
-                programmerInfo.classList.remove('show');
+                if (scientificGrid) scientificGrid.classList.remove('show');
+                if (programmerGrid) programmerGrid.classList.remove('show');
+                if (programmerInfo) programmerInfo.classList.remove('show');
                 
                 if (this.currentMode === 'scientific') {
-                    scientificGrid.classList.add('show');
+                    if (scientificGrid) scientificGrid.classList.add('show');
                 } else if (this.currentMode === 'programmer') {
-                    programmerGrid.classList.add('show');
-                    programmerInfo.classList.add('show');
+                    if (programmerGrid) programmerGrid.classList.add('show');
+                    if (programmerInfo) programmerInfo.classList.add('show');
                 }
                 
                 this.clear();
@@ -516,7 +540,8 @@ class ElysianCalculator {
     }
 
     closeHistory() {
-        document.getElementById('historyPanel').classList.remove('open');
+        const panel = document.getElementById('historyPanel');
+        if (panel) panel.classList.remove('open');
     }
 
     setupEventListeners() {
@@ -530,7 +555,7 @@ class ElysianCalculator {
             btn.addEventListener('click', () => this.chooseOperation(btn.getAttribute('data-op')));
         });
         
-        // Scientific functions (NOW WORKS: press function first, then number)
+        // Scientific functions (press function first, then number)
         document.querySelectorAll('[data-func]').forEach(btn => {
             btn.addEventListener('click', () => this.scientificFunction(btn.getAttribute('data-func')));
         });
@@ -541,25 +566,37 @@ class ElysianCalculator {
         });
         
         // Clear
-        document.querySelector('[data-action="clear"]').addEventListener('click', () => this.clear());
+        const clearBtn = document.querySelector('[data-action="clear"]');
+        if (clearBtn) clearBtn.addEventListener('click', () => this.clear());
         
         // Delete
-        document.querySelector('[data-action="delete"]').addEventListener('click', () => this.delete());
+        const deleteBtn = document.querySelector('[data-action="delete"]');
+        if (deleteBtn) deleteBtn.addEventListener('click', () => this.delete());
         
         // Equals
-        document.querySelector('[data-action="equals"]').addEventListener('click', () => this.equals());
+        const equalsBtn = document.querySelector('[data-action="equals"]');
+        if (equalsBtn) equalsBtn.addEventListener('click', () => this.equals());
         
         // History
-        document.getElementById('historyToggle').addEventListener('click', () => {
-            document.getElementById('historyPanel').classList.toggle('open');
-        });
+        const historyToggle = document.getElementById('historyToggle');
+        const historyPanel = document.getElementById('historyPanel');
+        const clearHistoryBtn = document.getElementById('clearHistory');
         
-        document.getElementById('clearHistory').addEventListener('click', () => this.clearHistory());
+        if (historyToggle) {
+            historyToggle.addEventListener('click', () => {
+                if (historyPanel) historyPanel.classList.toggle('open');
+            });
+        }
         
+        if (clearHistoryBtn) {
+            clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+        }
+        
+        // Close history when clicking outside
         document.addEventListener('click', (e) => {
             const panel = document.getElementById('historyPanel');
             const toggle = document.getElementById('historyToggle');
-            if (!panel.contains(e.target) && !toggle.contains(e.target) && panel.classList.contains('open')) {
+            if (panel && toggle && !panel.contains(e.target) && !toggle.contains(e.target) && panel.classList.contains('open')) {
                 panel.classList.remove('open');
             }
         });
@@ -571,15 +608,19 @@ class ElysianCalculator {
             } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/' || e.key === '%') {
                 this.chooseOperation(e.key);
             } else if (e.key === 'Enter' || e.key === '=') {
+                e.preventDefault();
                 this.equals();
             } else if (e.key === 'Escape') {
                 this.clear();
             } else if (e.key === 'Backspace') {
+                e.preventDefault();
                 this.delete();
             }
         });
     }
 }
 
-// Start the calculator
-new ElysianCalculator();
+// Start the calculator when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new ElysianCalculator();
+});
